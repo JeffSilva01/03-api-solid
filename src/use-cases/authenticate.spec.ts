@@ -14,7 +14,7 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should be able to authenticate', async () => {
-    usersRepository.create({
+    await usersRepository.create({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password_hash: await hash('12345678', 6),
@@ -32,7 +32,7 @@ describe('Authenticate Use Case', () => {
     const usersRepository = new InMemoreUsersRepository()
     const sut = new AuthenticateUseCase(usersRepository)
 
-    usersRepository.create({
+    await usersRepository.create({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password_hash: await hash('12345678', 6),
@@ -50,7 +50,7 @@ describe('Authenticate Use Case', () => {
     const usersRepository = new InMemoreUsersRepository()
     const sut = new AuthenticateUseCase(usersRepository)
 
-    usersRepository.create({
+    await usersRepository.create({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password_hash: await hash('12345678', 6),
