@@ -3,8 +3,24 @@ import { CheckInsRepository } from '../check-ins-repository'
 import { randomUUID } from 'node:crypto'
 import dayjs from 'dayjs'
 
-export class InMemoreCheckIns implements CheckInsRepository {
+export class InMemoreCheckInsRepository implements CheckInsRepository {
   private itens: CheckIn[] = []
+
+  async countBayUserId(userId: string) {
+    const countCheckInsByUserId = this.itens.filter(
+      (item) => item.user_id === userId,
+    )
+
+    return countCheckInsByUserId.length
+  }
+
+  async findManyByUserId(userId: string, page: number = 1) {
+    const checkIns = this.itens
+      .filter((checkIn) => checkIn.user_id === userId)
+      .slice((page - 1) * 20, page * 20)
+
+    return checkIns
+  }
 
   async findByUserIdOnDate(userId: string, date: Date) {
     const startOfTheDay = dayjs(date).startOf('date')

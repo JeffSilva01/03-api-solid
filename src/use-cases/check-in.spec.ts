@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { CheckInUseCase } from './check-in'
-import { InMemoreCheckIns } from '@/repositories/in-memore/in-memore-check-ins'
+import { InMemoreCheckInsRepository } from '@/repositories/in-memore/in-memore-check-ins-repository'
 import { InMemoreGymsRepository } from '@/repositories/in-memore/in-memore-gyms-repository'
 import { GymsRepository } from '@/repositories/gyms-repository'
 import { MaxDistanceError } from './errors/max-distance-error'
 import { MaxNumberOfCheckInsError } from './errors/max-number-of-check-ins-error'
 
-let usersRepository: InMemoreCheckIns
+let usersRepository: InMemoreCheckInsRepository
 let gymsRepository: GymsRepository
 let sut: CheckInUseCase
 
 describe('Check In Use Case', () => {
   beforeEach(() => {
-    usersRepository = new InMemoreCheckIns()
+    usersRepository = new InMemoreCheckInsRepository()
     gymsRepository = new InMemoreGymsRepository()
     sut = new CheckInUseCase(usersRepository, gymsRepository)
 
