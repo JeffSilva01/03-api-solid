@@ -1,9 +1,25 @@
 import { Gym, Prisma } from '@prisma/client'
-import { GymsRepository } from '../gyms-repository'
+import { FindManyNearbyParams, GymsRepository } from '../gyms-repository'
 import { randomUUID } from 'node:crypto'
+import { getDistanceBetweenCoordinates } from '@/utils/get-distance-between-coordinates'
 
 export class InMemoreGymsRepository implements GymsRepository {
   private itens: Gym[] = []
+
+  async findManyNearby({ latitude, longitude }: FindManyNearbyParams) {
+    const gyms = this.itens.filter((item) => {
+      const distance = getDistanceBetweenCoordinates(
+        { latitude, longitude },
+        {
+          latitude: item.latitude.toNumber(),
+          longitude: item.longitude.toNumber(),
+        },
+      )
+      return distance < 10
+    })
+
+    return gyms
+  }
 
   async searchMany(query: string, page: number = 1) {
     const gyms = this.itens
