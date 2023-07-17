@@ -12,7 +12,7 @@ interface ValidateCheckInsCaseResponse {
   checkIn: CheckIn
 }
 
-export class ValidateCheckInsCase {
+export class ValidateCheckInsUseCase {
   constructor(private checkInsRepository: CheckInsRepository) {}
 
   async execute({
