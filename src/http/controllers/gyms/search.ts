@@ -3,19 +3,19 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 export async function search(request: FastifyRequest, replay: FastifyReply) {
-  const searchGymsBodySchema = z.object({
+  const searchGymsQuerySchema = z.object({
     query: z.string(),
     page: z.coerce.number().min(1).default(1),
   })
 
-  const { query, page } = searchGymsBodySchema.parse(request.body)
+  const { query, page } = searchGymsQuerySchema.parse(request.query)
 
   const createGymUseCase = makeSearchGymsUseCase()
 
-  const gym = await createGymUseCase.execute({
+  const { gyms } = await createGymUseCase.execute({
     page,
     query,
   })
 
-  return replay.status(200).send({ gym })
+  return replay.status(200).send({ gyms })
 }

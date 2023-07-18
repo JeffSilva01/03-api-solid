@@ -3,7 +3,7 @@ import { app } from '@/app'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { createAndAuthenticateUser } from '@/utils/test/create-and-authenticate-user'
 
-describe('Create Gym (e2e)', async () => {
+describe('Check-ins History (e2e)', async () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -12,10 +12,10 @@ describe('Create Gym (e2e)', async () => {
     await app.close()
   })
 
-  it('should be able to create a gyms', async () => {
+  it('should be able to list the history of check-ins', async () => {
     const { token } = await createAndAuthenticateUser(app)
 
-    const response = await request(app.server)
+    const responseCreateGym = await request(app.server)
       .post('/gyms')
       .set('Authorization', `Bearer ${token}`)
       .send({
@@ -26,6 +26,19 @@ describe('Create Gym (e2e)', async () => {
         longitude: '-38.6147046',
       })
 
-    expect(response.status).toEqual(201)
+    await request(app.server)
+      .post(`/gyms/${responseCreateGym.body.gym.id}/check-ins`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        latitude: '-3.7429479',
+        longitude: '-38.6147046',
+      })
+
+    const response = await request(app.server)
+      .get('/check-ins/history')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(response.status).toEqual(200)
+    expect(response.body.checkIns).toHaveLength(1)
   })
 })

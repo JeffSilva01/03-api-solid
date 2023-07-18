@@ -5,7 +5,7 @@ import { z } from 'zod'
 export async function create(request: FastifyRequest, replay: FastifyReply) {
   const createGymBodySchema = z.object({
     title: z.string(),
-    description: z.string().email().nullable(),
+    description: z.string().nullable(),
     phone: z.string().nullable(),
     latitude: z.coerce.number().min(-90).max(90),
     longitude: z.coerce.number().min(-180).max(180),
@@ -16,7 +16,7 @@ export async function create(request: FastifyRequest, replay: FastifyReply) {
 
   const createGymUseCase = makeCreateGymUseCase()
 
-  const gym = await createGymUseCase.execute({
+  const { gym } = await createGymUseCase.execute({
     title,
     description,
     latitude,
@@ -24,5 +24,5 @@ export async function create(request: FastifyRequest, replay: FastifyReply) {
     phone,
   })
 
-  return replay.status(200).send({ gym })
+  return replay.status(201).send({ gym })
 }
